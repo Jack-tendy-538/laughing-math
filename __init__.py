@@ -71,6 +71,47 @@ replace_builtins()
 # result = int(5) ^ 10 # returns [5, 6, 7, 8, 9, 10]
 # result = float(5.0) ^ 10.0 # returns [5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
 # result = float(5.0) ~  # returns 120 (factorial of 5)
+def arrangement(m:int, n:int):
+    """
+    Calculates the number of arrangements of m items taken n at a time.
+    
+    :param m: Total number of items.
+    :param n: Number of items to arrange.
+    :return: The number of arrangements.
+    """
+    if m < n:
+        return 0
+    return factorial(m) // factorial(m - n)
+
+def combination(m:int, n:int):
+    """
+    Calculates the number of combinations of m items taken n at a time.
+    
+    :param m: Total number of items.
+    :param n: Number of items to choose.
+    :return: The number of combinations.
+    """
+    if m < n:
+        return 0
+    return factorial(m) // (factorial(n) * factorial(m - n))
+
+def permutation(m:int, n:int):
+    """
+    Calculates the number of permutations of m items taken n at a time.
+    
+    :param m: Total number of items.
+    :param n: Number of items to permute.
+    :return: The number of permutations.
+    """
+    if m < n:
+        return 0
+    return factorial(m) // factorial(m - n)
+
+C, A , P = combination, arrangement, permutation
+
+def stirling(m:int, n:int):
+    return int(sigma(int(1)^(n+1), lambda x: C(x, n)*(x**m)*((-1)**(x+1)))/ factorial(n))
+
 def restore_builtins():
     """
     Restores the original built-in int and float types.
