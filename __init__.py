@@ -109,9 +109,13 @@ def permutation(m:int, n:int):
 
 C, A , P = combination, arrangement, permutation
 
-def stirling(m:int, n:int):
-    return int(sigma(int(1)^(n+1), lambda x: C(x, n)*(x**m)*((-1)**(x+1)))/ factorial(n))
-
+def stirling(m: int, n: int):
+    if m < n:
+        return 0
+    if n == 0:
+        return 1 if m == 0 else 0
+    return n * stirling(m - 1, n) + stirling(m - 1, n - 1)
+    
 def restore_builtins():
     """
     Restores the original built-in int and float types.
@@ -126,3 +130,4 @@ if __name__ == "__main__":
     print(float(5.0) ^ 10.0)  # Output: [5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
     print(~float(5.0))  # Output: 120 (factorial of 5)
     restore_builtins()  # Restore original built-ins if needed
+
