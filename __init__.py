@@ -1,4 +1,6 @@
 import builtins
+from typing import Callable
+from random import random
 
 originalInt, originalFloat = builtins.int, builtins.float
 def sigma(value:list, function):
@@ -115,7 +117,125 @@ def stirling(m: int, n: int):
     if n == 0:
         return 1 if m == 0 else 0
     return n * stirling(m - 1, n) + stirling(m - 1, n - 1)
+
+
+class discreteRV(dict):
+    """
+    A class representing a discrete random variable with methods to calculate
+    its probability distribution and mean, variance.
+    Inherits from the built-in dict class.
+    the keys are the values, and the values are the frequencies.
+    """
+    def dip(self):
+        """
+        Returns the probability distribution as a list of tuples (value, probability).
+        
+        :return: List of tuples representing the probability distribution.
+        """
+        total = sum(self.values())
+        return [(k, v / total) for k, v in self.items()]
     
+    def get_choice(self):
+        p = random()
+        for k, v in self.dip():
+            p -= v
+            if p <= 0:
+                return k
+    
+    def mean(self):
+        """
+        Calculates the mean (expected value) of the discrete random variable.
+
+        :return: The mean value.
+        """
+        total = sum(self.values())
+        return sigma(list(self.items()), lambda kv: kv[0] * kv[1] / total)
+    
+    def variance(self):
+        """
+        Calculates the variance of the discrete random variable.
+        
+        :return: The variance value.
+        """
+        mean_value = self.mean()
+        return sigma(list(self.items()), lambda kv: kv[1] * (kv[0] - mean_value) ** 2)
+    
+    def stddev(self):
+        """
+        Calculates the standard deviation of the discrete random variable.
+        
+        :return: The standard deviation value.
+        """
+        return self.variance() ** 0.5
+    
+    def __repr__(self):
+        return f"discreteRV({super().__repr__()})"
+    
+    def possibility_between(self, low, high,low_inclusive=True, high_inclusive=True):
+        """
+        Calculates the probability of the random variable falling between two values.
+        
+        :param low: The lower bound.
+        :param high: The upper bound.
+        :param low_inclusive: Whether to include the lower bound in the range.
+        :param high_inclusive: Whether to include the upper bound in the range.
+        :return: The probability of the random variable falling between the bounds.
+        """
+        total = sum(self.values())
+        if low_inclusive and high_inclusive:
+            return sum(v for k, v in self.items() if low <= k <= high) / total
+        elif low_inclusive and not high_inclusive:
+            return sum(v for k, v in self.items() if low <= k < high) / total
+        elif not low_inclusive and high_inclusive:
+            return sum(v for k, v in self.items() if low < k <= high) / total
+        else:
+            return sum(v for k, v in self.items() if low < k < high) / total
+
+def two_point_dist(p:float):
+    """
+    Creates a two-point discrete random variable with probabilities p and 1-p.
+    
+    :param p: Probability of the first outcome (0).
+    :return: A discreteRV instance representing the two-point distribution.
+    """
+    if not (0 <= p <= 1):
+        raise ValueError("Probability must be between 0 and 1.")
+    return discreteRV({0: p, 1: 1 - p})
+
+def binomial_dist(n:int, p:float):
+    """
+    Creates a binomial discrete random variable with parameters n and p.
+    
+    :param n: Number of trials.
+    :param p: Probability of success on each trial.
+    :return: A discreteRV instance representing the binomial distribution.
+    """
+    if not (0 <= p <= 1):
+        raise ValueError("Probability must be between 0 and 1.")
+    rv = discreteRV()
+    for k in range(n + 1):
+        rv[k] = C(n, k) * (p ** k) * ((1 - p) ** (n - k))
+    return rv
+
+def hypergeometric_dist(N:int, K:int, n:int):
+    """
+    Creates a hypergeometric discrete random variable with parameters N, K, and n.
+    
+    :param N: Total number of items.
+    :param K: Total number of successful items.
+    :param n: Number of items drawn.
+    :return: A discreteRV instance representing the hypergeometric distribution.
+    """
+    if not (0 <= K <= N) or not (0 <= n <= N):
+        raise ValueError("Invalid parameters for hypergeometric distribution.")
+    rv = discreteRV()
+    for k in range(max(0, n - (N - K)), min(n, K) + 1):
+        rv[k] = (C(K, k) * C(N - K, n - k)) / C(N, n)
+    return rv
+
+B, h= binomial_dist, hypergeometric_dist
+
+
 def restore_builtins():
     """
     Restores the original built-in int and float types.
@@ -130,4 +250,5 @@ if __name__ == "__main__":
     print(float(5.0) ^ 10.0)  # Output: [5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
     print(~float(5.0))  # Output: 120 (factorial of 5)
     restore_builtins()  # Restore original built-ins if needed
+
 
