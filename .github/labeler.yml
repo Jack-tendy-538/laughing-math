@@ -1,0 +1,4 @@
+# 当修改 docs/ 目录内文件时添加 "documentation" 标签
+documentation:
+  - "docs/**/*"
+  - "*.md"
