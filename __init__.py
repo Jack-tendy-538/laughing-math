@@ -235,6 +235,24 @@ def hypergeometric_dist(N:int, K:int, n:int):
 
 B, h= binomial_dist, hypergeometric_dist
 
+###### TACKLE YOUR ISSUE HERE######
+def question_1(n:int, m:int, k:int):
+    """
+    > tackles problem in <a href="https://github.com/Jck-tendy-538/laughing-math/blob/main/README.md">README</a>.
+    Given that n products contains m defective products, this function calculates the situations
+    where k defective products are selected.
+    this must take into account that the selection is done with replacement.
+    and two situations are considered."""
+    if m <= k < m-n:
+        return m*sigma(m^(k+1),lambda r: C(r-m, r-n)* ~int(r-1))
+    elif k>= m-n:
+        k = m-n
+        return m*sigma(m^(k+1),lambda r: C(r-m, r-n)* ~int(r-1)) + ~(m-n)
+    else:
+        return 0
+
+
+###### END OF ISSUE######
 
 def restore_builtins():
     """
@@ -250,5 +268,6 @@ if __name__ == "__main__":
     print(float(5.0) ^ 10.0)  # Output: [5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
     print(~float(5.0))  # Output: 120 (factorial of 5)
     restore_builtins()  # Restore original built-ins if needed
+
 
 
