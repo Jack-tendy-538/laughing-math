@@ -1,4 +1,5 @@
 # laughing-math
+
 > A good collection of solutions of A&amp;C problems, especially for senior high school students struggling to handle math problem.
 
 ## 这个仓库是什么？
@@ -11,6 +12,7 @@
 A.114种         B.90种        C.106种        D.128种
 ```
 （来自全品试卷选必3（一）第六章，答案是A）
+
 难道你看第一眼，就能知道选哪个？所以我开发这个项目，就是为了给大家一个代码解，可能对学了选必下的同学有参考意义。
 
 
@@ -39,13 +41,13 @@ lm.restore_builtin()
 ```
 
 ## 其它用法
-如果你想探索此模块其它功能，可以借鉴下面代码：
+如果你想探索此模块其它功能，可以借鉴下面代码（不用replace_builtin）：
 
 ```
 import lm
 print(lm.C(3,5))# 3为上标，5为下标的组合数
 print(lm.stirling(5,3))# 将5个不同的小球放入3个不同的盒子，且3个盒子不能空
-X = B(0.6,9)# X ~ B(0.6,9)
+X = lm.B(0.6,9)# X ~ B(0.6,9)
 # X是一个字典所以很抱歉不能用P(3 < X < 6)求概率，但是可以：
 print(X.possibility_between(3,6,False,False))# 两个False表示开区间(3,6)
 print(X.mean())
@@ -59,4 +61,7 @@ print(X.mean())
 ## 贡献
 
 你可以在issue里给我出一道排列组合题，我会尽可能给出代码解。
-当然，如果题目太difficult的话，还是有请其它contributor帮忙。THANKS!!!!!
+
+当然，如果题目太difficult的话，还是有请其它contributor帮忙（在discussions里）。
+
+THANKS!!!!!
